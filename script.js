@@ -32,7 +32,7 @@ const translations = {
     about_p2: "本人正在学习嵌入式系统，C++算法，Web前端和JS脚本。",
     stat_exp: "开发经验",
     stat_proj: "成功项目",
-    section_works: "精选作品",
+    section_works: "精选作品（点击可进入！）",
     // 作品
     proj_1_title: "IKUN世界",
     proj_1_desc: "Web前端网站实训作品：十分炫酷，可玩性极高的蔡徐坤应援网站。",
@@ -85,7 +85,7 @@ const translations = {
       "I am currently studying Embedded Systems, C++ Algorithms, Web Frontend, and JavaScript.",
     stat_exp: "YEARS EXP",
     stat_proj: "PROJECTS",
-    section_works: "SELECTED WORKS",
+    section_works: "SELECTED WORKS (Click to enter!)",
     // Works
     proj_1_title: "IKUN World",
     proj_1_desc:
