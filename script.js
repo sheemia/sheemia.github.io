@@ -246,6 +246,7 @@ const initThree = () => {
 
   const animate = () => {
     requestAnimationFrame(animate);
+    particlesMesh.rotation.y += 0.001;
     particlesMesh.rotation.y -= mouseX * rotationSpeed;
     particlesMesh.rotation.x -= mouseY * rotationSpeed;
     renderer.render(scene, camera);
