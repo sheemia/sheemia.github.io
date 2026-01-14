@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的个人主页 | Personal Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- 1. 核心配色：极寒冰蓝 (No Purple) --- */
+        :root {
+            --bg-color: #020408; /* 深黑蓝底色 */
+            --text-primary: #e0faff;
+            --text-secondary: #8aaacc;
+            --accent-cyan: #00f2ff; /* 主色：赛博青 */
+            --accent-blue: #0066ff; /* 副色：深海蓝 */
+            --glass-bg: rgba(5, 15, 30, 0.75);
+            --border-color: rgba(0, 242, 255, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; /* 隐藏默认鼠标 */ }
+        
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* --- 2. 瞄准镜光标系统 (Dot + Circle) --- */
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background-color: var(--accent-cyan);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            pointer-events: none; z-index: 9999;
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
+
+        .cursor-circle {
+            width: 40px; height: 40px;
+            border: 1px solid var(--accent-cyan);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            pointer-events: none; z-index: 9998;
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+            opacity: 0.6;
+        }
+
+        /* --- Three.js 背景容器 --- */
+        #canvas-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+        }
+
+        /* --- 导航栏 --- */
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 20px 40px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 100; background: linear-gradient(to bottom, rgba(2, 4, 8, 0.9), transparent);
+        }
+        .logo { 
+            font-family: 'Orbitron', sans-serif; font-size: 1.6rem; font-weight: 700; 
+            color: var(--accent-cyan); letter-spacing: 2px; text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+        }
+        
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links li { list-style: none; }
+        .nav-links a { 
+            text-decoration: none; color: #fff; font-size: 0.9rem; letter-spacing: 1px;
+            position: relative; transition: 0.3s; 
+        }
+        .nav-links a:hover { color: var(--accent-cyan); }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px;
+            background: var(--accent-cyan); transition: 0.3s; 
+        }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* --- 通用版块设置 --- */
+        section {
+            min-height: 100vh; padding: 100px 10%;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif; font-size: 3rem; margin-bottom: 50px;
+            background: linear-gradient(90deg, #fff, var(--text-secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            opacity: 0; transform: translateY(30px); border-left: 5px solid var(--accent-cyan); padding-left: 20px;
+        }
+
+        /* --- 1. 主页 (Home) --- */
+        #home { align-items: flex-start; }
+        .hero-title { font-size: 5rem; font-weight: 700; line-height: 1.1; margin-bottom: 20px; }
+        .hero-title span { color: var(--accent-cyan); text-shadow: 0 0 20px rgba(0, 242, 255, 0.4); }
+        .type-wrapper { 
+            font-size: 1.5rem; color: var(--accent-blue);
+            font-family: 'Orbitron', sans-serif; margin-bottom: 40px; min-height: 30px; 
+        }
+
+        /* --- 2. 简介 (About) --- */
+        .about-content { display: flex; gap: 50px; flex-wrap: wrap; align-items: center; }
+        .about-text { flex: 1; font-size: 1.1rem; line-height: 1.8; color: var(--text-secondary); }
+        .about-stats { display: flex; gap: 40px; }
+        .stat-item h3 { font-size: 3rem; color: var(--accent-cyan); font-family: 'Orbitron'; margin-bottom: 5px; }
+        .stat-item p { font-size: 0.9rem; color: #fff; letter-spacing: 1px; }
+
+        /* --- 3. 作品 (Works) --- */
+        .projects-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; width: 100%;
+        }
+        .project-card {
+            display: block; text-decoration: none;
+            background: var(--glass-bg); border: 1px solid var(--border-color);
+            padding: 35px; transition: 0.4s; opacity: 0; transform: translateY(50px);
+            position: relative; overflow: hidden;
+        }
+        .project-card:hover {
+            transform: translateY(-10px); 
+            border-color: var(--accent-cyan); 
+            box-shadow: 0 10px 40px rgba(0, 242, 255, 0.15);
+        }
+        .project-card h3 { color: var(--accent-cyan); margin-bottom: 15px; font-size: 1.4rem; }
+        .project-card p { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; }
+
+        /* --- 4. 获奖 (Awards) --- */
+        .awards-list { width: 100%; border-left: 1px solid rgba(255,255,255,0.1); }
+        .award-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s; opacity: 0; transform: translateX(-30px);
+        }
+        .award-item:hover { 
+            padding-left: 40px; 
+            background: linear-gradient(90deg, rgba(0, 242, 255, 0.1), transparent); 
+            border-left: 3px solid var(--accent-cyan);
+        }
+        .award-year { font-family: 'Orbitron'; color: var(--accent-blue); font-weight: bold; font-size: 1.2rem; }
+        .award-title { font-size: 1.3rem; color: #fff; margin-left: 20px; flex: 1; }
+        .award-desc { font-size: 0.9rem; color: var(--text-secondary); }
+
+        /* --- 5. 社交媒体 (Social) --- */
+        .social-container { display: flex; gap: 20px; flex-wrap: wrap; }
+        .social-btn {
+            padding: 20px 50px; border: 1px solid var(--border-color); color: var(--accent-cyan);
+            text-decoration: none; font-family: 'Orbitron'; letter-spacing: 2px; font-weight: bold;
+            transition: 0.3s; position: relative; overflow: hidden; opacity: 0; scale: 0.9;
+            background: rgba(0,0,0,0.3);
+        }
+        .social-btn::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--accent-cyan); z-index: -1; 
+            transform: scaleX(0); transform-origin: right; transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .social-btn:hover::before { transform: scaleX(1); transform-origin: left; }
+        .social-btn:hover { color: #000; border-color: var(--accent-cyan); box-shadow: 0 0 30px var(--accent-cyan); }
+
+        /* --- 6. 联系方式 (Contact) - 纯文本样式 --- */
+        .contact-box { 
+            text-align: center; border: 1px solid var(--border-color); padding: 60px; 
+            background: var(--glass-bg); backdrop-filter: blur(10px);
+        }
+        
+        .email-text { 
+            font-size: clamp(1.5rem, 5vw, 3rem); 
+            color: #fff; 
+            font-weight: 700; 
+            transition: 0.3s;
+            user-select: text; /* 允许用户复制文本 */
+            cursor: none; /* 保持自定义光标 */
+        }
+        /* 仍然保留悬浮发光，为了好看 */
+        .email-text:hover { 
+            color: var(--accent-cyan); 
+            text-shadow: 0 0 30px var(--accent-cyan); 
+        }
+
+        @media(max-width: 768px) {
+            nav { padding: 15px; } .nav-links { display: none; }
+            .hero-title { font-size: 3rem; } .about-content { flex-direction: column; align-items: flex-start; }
+            .award-item { flex-direction: column; align-items: flex-start; gap: 10px; } .award-title { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-circle"></div>
+
+    <div id="canvas-container"></div>
+
+    <nav>
+        <div class="logo">MY.SPACE</div>
+        <ul class="nav-links">
+            <li><a href="#home">主页</a></li>
+            <li><a href="#about">简介</a></li>
+            <li><a href="#works">作品</a></li>
+            <li><a href="#awards">获奖</a></li>
+            <li><a href="#social">社交</a></li>
+            <li><a href="#contact">联系</a></li>
+        </ul>
+    </nav>
+
+    <section id="home">
+        <h1 class="hero-title">你好，我是<br><span>数字游民</span></h1>
+        <div class="type-wrapper">探索 <span id="typed-text"></span></div>
+    </section>
+
+    <section id="about">
+        <h2 class="section-title gs-reveal">个人简介</h2>
+        <div class="about-content gs-reveal">
+            <div class="about-text">
+                <p>我是一名热衷于创造极致 Web 体验的开发者。拒绝平庸，追求代码与视觉的完美共鸣。</p>
+                <br>
+                <p>专注于前端交互、3D 可视化以及高性能后端架构。我的目标是构建不仅仅能用，而且让人惊叹的数字产品。</p>
+            </div>
+            <div class="about-stats">
+                <div class="stat-item"><h3>05+</h3><p>YEARS EXP</p></div>
+                <div class="stat-item"><h3>42+</h3><p>PROJECTS</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="works">
+        <h2 class="section-title gs-reveal">精选作品</h2>
+        <div class="projects-grid">
+            <a href="https://www.google.com" target="_blank" class="project-card gs-card">
+                <h3>Cyber Dashboard</h3>
+                <p>基于 React 的数据可视化仪表盘，采用暗黑冰蓝风格，实时监控服务器集群状态。</p>
+            </a>
+            <a href="https://www.google.com" target="_blank" class="project-card gs-card">
+                <h3>Neon Engine</h3>
+                <p>轻量级 WebGL 渲染引擎，用于在移动端流畅展示高精度 3D 模型。</p>
+            </a>
+            <a href="https://www.google.com" target="_blank" class="project-card gs-card">
+                <h3>AI Chat Bot</h3>
+                <p>集成了 LLM 的智能助手，拥有拟人化的语音交互与上下文记忆能力。</p>
+            </a>
+        </div>
+    </section>
+
+    <section id="awards">
+        <h2 class="section-title gs-reveal">荣誉奖项</h2>
+        <div class="awards-list">
+            <div class="award-item gs-award"><div class="award-year">2025</div><div class="award-title">Hackathon Gold Medal</div><div class="award-desc">Google Developer Group</div></div>
+            <div class="award-item gs-award"><div class="award-year">2024</div><div class="award-title">Best UI Design</div><div class="award-desc">Awwwards Nomination</div></div>
+            <div class="award-item gs-award"><div class="award-year">2023</div><div class="award-title">Open Source Hero</div><div class="award-desc">GitHub Contribution</div></div>
+        </div>
+    </section>
+
+    <section id="social">
+        <h2 class="section-title gs-reveal">关注我</h2>
+        <div class="social-container">
+            <a href="https://www.google.com" target="_blank" class="social-btn gs-social">GITHUB</a>
+            <a href="https://www.google.com" target="_blank" class="social-btn gs-social">TWITTER</a>
+            <a href="https://www.google.com" target="_blank" class="social-btn gs-social">BILIBILI</a>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2 class="section-title gs-reveal">保持联系</h2>
+        <div class="contact-box gs-reveal">
+            <p style="margin-bottom: 30px; color: var(--text-secondary);">准备好开启下一个大项目了吗？</p>
+            <p class="email-text">contact@mysite.com</p>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+
+    <script>
+        // --- 1. 光标逻辑 ---
+        const dot = document.querySelector('.cursor-dot');
+        const circle = document.querySelector('.cursor-circle');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            dot.style.left = `${posX}px`;
+            dot.style.top = `${posY}px`;
+            circle.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        // 交互反馈：添加了 .email-text，让鼠标移上去光标依然会放大，显得可交互
+        const hoverTargets = document.querySelectorAll('a, .project-card, .social-btn, .email-text');
+        hoverTargets.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                circle.style.width = '60px';
+                circle.style.height = '60px';
+                circle.style.backgroundColor = 'rgba(0, 242, 255, 0.1)'; 
+                circle.style.borderColor = 'transparent'; 
+            });
+            el.addEventListener('mouseleave', () => {
+                circle.style.width = '40px';
+                circle.style.height = '40px';
+                circle.style.backgroundColor = 'transparent';
+                circle.style.borderColor = '#00f2ff'; 
+            });
+        });
+
+        // --- 2. 打字机特效 ---
+        new Typed('#typed-text', {
+            strings: ['WEB 3.0', '交互设计', '全栈开发'],
+            typeSpeed: 60, backSpeed: 40, backDelay: 2000, loop: true
+        });
+
+        // --- 3. Three.js 星空 ---
+        const initThree = () => {
+            const container = document.getElementById('canvas-container');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 2;
+
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            const geometry = new THREE.BufferGeometry();
+            const particlesCount = 1800;
+            const posArray = new Float32Array(particlesCount * 3);
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 6; 
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.005,
+                color: 0x00f2ff, // 青色
+                transparent: true,
+                opacity: 0.8,
+            });
+
+            const particlesMesh = new THREE.Points(geometry, material);
+            scene.add(particlesMesh);
+
+            let mouseX = 0;
+            let mouseY = 0;
+            const rotationSpeed = 0.006; 
+
+            document.addEventListener('mousemove', (event) => {
+                mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                mouseY = (event.clientY / window.innerHeight) * 2 - 1;
+            });
+
+            const animate = () => {
+                requestAnimationFrame(animate);
+                particlesMesh.rotation.y -= mouseX * rotationSpeed;
+                particlesMesh.rotation.x -= mouseY * rotationSpeed;
+                renderer.render(scene, camera);
+            };
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+        initThree();
+
+        // --- 4. GSAP ---
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.utils.toArray('.gs-reveal').forEach(elem => {
+            gsap.to(elem, {
+                scrollTrigger: { trigger: elem, start: "top 85%" },
+                y: 0, opacity: 1, duration: 1, ease: "power3.out"
+            });
+        });
+        gsap.to('.gs-card', {
+            scrollTrigger: { trigger: '#works', start: "top 75%" },
+            y: 0, opacity: 1, duration: 0.8, stagger: 0.2
+        });
+        gsap.to('.gs-award', {
+            scrollTrigger: { trigger: '#awards', start: "top 80%" },
+            x: 0, opacity: 1, duration: 0.8, stagger: 0.15
+        });
+        gsap.to('.gs-social', {
+            scrollTrigger: { trigger: '#social', start: "top 85%" },
+            scale: 1, opacity: 1, duration: 0.5, stagger: 0.1, ease: "back.out(1.7)"
+        });
+    </script>
+</body>
+</html>
