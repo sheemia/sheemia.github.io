@@ -1,0 +1,197 @@
+<!--Author:hsluxc@qq.com  Date:20240516-->
+<!-- 增进：图文说明 还可以模仿学校首页轮播图-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>轮播图从简单到复杂V5</title>
+		<style type="text/css">
+			* {/*所有元素*/
+				padding: 0;/*消除内外边距*/
+				margin: 0;
+			}
+			body{
+				display: flex;
+				justify-content: space-around;
+				align-items: center;
+				height: 100vh;
+			}
+			#box {/*大图图框*/
+				position: relative;/*相对定位 */
+				width: 640px;
+				/* height: ?; */ /*可以不定高？*/
+			}
+			#box #img {/*大图图像*/
+				width: 100%; /*一般地，图大小与框大小一致*/
+				/* height: ?; */ /*可以不定高？*/
+				border: 1px solid red; /*1px的红色实线边框 */
+			}
+			
+			#arr {/*向前向后控制*/
+				display: none;/*默认不显示*/
+				/* display: block;/*显示是为了调试*/ */
+			}
+			
+			#arr span {/*向前向后控制*/
+				position: absolute;/*绝对定位*/
+				top: 50%;/*垂直居中*/
+				width: 40px;/*控制块大小 */
+				height: 40px;
+				transform: translateY(-50%); /*垂直居中*/
+				cursor: pointer;/*鼠标形状为手指*/
+				text-align: center;/*左右居中*/
+				line-height: 40px;/*行高，1倍，即40px */
+				font-size: 20px; /*字体大小，让<>显大 */
+				color: #fff;/*前景白色*/
+				background-color: #000;/*背景黑色*/
+				opacity: 0.3;/*透明度*/
+				border: 1px solid #fff;/*边框 */
+			}
+			
+			#next {/*向后控制块*/
+				right: 10px;/*绝对定位下距右10px*/
+			}
+			
+			#prev {/*向前控制块*/
+				left: 10px;/*绝对定位下距左10px*/
+			}
+
+			#nav {/*列表导航条*/
+				width: 100%; /*与图框宽度一致*/
+				height: 20px;
+				position: absolute;/*绝对定位*/
+				bottom: 10%;/*距图框高度10%的距离*/
+				text-align: center;/*列表项居中*/
+			}
+			
+			#nav li {/*列表项*/
+				display: inline-block;/*列表项按行级并排，包含的内容按块级独占*/
+				position: relative;/*相对定位*/
+				margin: 0px 10px;/*左右空距10px*/
+				width: 20px;/*注意宽度和高度相同，以便显示圆点*/
+				height: 100%;/*一般与导航条高度一致*/
+				background-color: red;/*背景红色*/
+				border-radius: 50%;/*圆角边框*/
+				cursor: pointer;/*鼠标形状为手指*/
+			}
+			
+			#nav .active {/*导航条中的活动项*/
+				background-color: yellow;/*改变背景颜色为黄色*/
+			}
+
+			#nav li div {/*缩略图框*/
+				width: 80px;/*缩略大小是正图的20%*/				
+				/* height: 83px; */
+				position: absolute;/*绝对定位*/
+				left: 50%;/*左边：向右移动列表项（#nav li）宽度大小一半，即10px */
+				bottom: 120%;/*底部：距离移动列表项（#nav li）高度120%，即24px */
+				transform: translateX(-50%);/*缩略图框在列表项中间*/
+				border: solid 1px red;/*1px的红色实线边框*/
+				display: none;/*默认不显示 */
+			}
+			
+			#nav li div img {/*缩略图像*/
+				width: 100%;/*一般地，图大小与框大小一致*/
+				height: 100%;
+			}
+			
+			#note{
+				width: 100%; /*与图框宽度一致*/
+				height: 40px;
+				position: absolute;/*绝对定位*/
+				bottom: -20%;/*距图框高度10%的距离*/
+				text-align: center;/*列表项居中*/
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="box">
+			<img id="img" />
+			<ul id="nav"></ul>
+			<div id="arr">
+				<span id="prev">&lt;</span>
+				<span id="next">&gt;</span>
+			</div>
+			<div id="note"><h2 class="tit"></h2><p class="exp"></p></div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		//0.预备图片素材，存放于images文件夹下；名称需一致。
+		let tits = ['隧道', '图书馆', '什么楼', '学生宿舍', '潮菜学院', '西门'];
+		let exps = ['拍摄于2024年5月10日', '好看的书倒是不少', '仰望', '住得舒心', '好吃，多加一道', '看风景不错'];
+		
+		let pics = ["0.jpg", "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"];//图片文件名
+		let dir = "image/";//图片所在文件夹
+		let interval = 2000; /*图片轮播间隔时间（毫秒）*/
+		//1.检索基本结构
+		let box = document.getElementById("box");/*大图图框*/
+		let img = document.getElementById("img");/*大图图像*/
+
+		var arr = document.getElementById("arr");/*方向箭头*/
+		var prev = document.getElementById("prev");/*向前箭头*/
+		var next = document.getElementById("next");/*向后箭头*/
+
+		var nav = document.getElementById("nav");/*列表导航条*/
+		let note = document.getElementById('note');
+		//2.动态创建结构		
+		let idx = 0; //当前索引
+
+		var str = "";
+		//根据图片数量生成导航条的列表项
+		for(var i = 0; i < pics.length; i++) {
+			// str += "<li></li>";
+			str += "<li><div class='tn'><img src='" + dir + pics[i] + "'/></div></li>";
+		}
+		nav.innerHTML = str;
+
+		var lis = nav.getElementsByTagName("li");/*列表项集合*/
+		
+		var tns = document.getElementsByClassName("tn");/*缩略图框集合*/
+
+		let tit = document.querySelector('#note .tit');
+		let exp = document.querySelector('#note .exp');
+		//3.动态创建事件
+		next.onclick = function(){carousel(99);};//单击向后事件，播放后图
+		prev.onclick = function(){carousel(-99);};//单击向前事件，播放前图
+
+		for(var i = 0; i < pics.length; i++) { //列表项、缩略图数量与图片数量相等
+			lis[i].index = i; //每个列表项加入索引值
+			lis[i].onclick = function() { carousel(this.index);}//鼠标单击事件
+			lis[i].onmouseover = function() {tns[this.index].style.display = "block";}//鼠标移入显示缩略图
+			lis[i].onmouseout = function() {tns[this.index].style.display = "none";}//鼠标移出消除缩略图
+		}
+
+		function carousel(pos) {//显示即将的大图和样式，pos:即将的列表索引值，99向前，-99向后
+			lis[idx].className = "";//消除当前索引列表样式
+
+			if(pos == 99){
+				idx++; //当前索引向后
+				if(idx >= pics.length) idx = 0;//索引边界检测和重置
+			}else if(pos == -99){
+				idx--;//当前索引向前
+				if(idx < 0) idx = pics.length - 1;//索引边界检测和重置
+			}else{
+				idx = pos; //即将索引转为当前索引
+			}
+			img.src = dir + pics[idx]; //切换到当前图片	
+
+			lis[idx].className = "active";//加入当前索引列表样式
+
+			tit.innerHTML = tits[idx];
+			exp.innerHTML = exps[idx];
+		}
+		//4.初始化状态
+		carousel(0);//默认从0开始
+		//5.操作自动播放
+		let timer = setInterval("carousel(99)", interval);//自动播放
+		box.onmouseover = function () {//鼠标移入图框
+			arr.style.display = "block";//显示箭头
+			clearInterval(timer);//清除定时器，不再自动播放
+		}
+		box.onmouseleave = function () {//鼠标移出图框
+			arr.style.display = "none";//隐藏箭头
+			timer = setInterval("carousel(99)", interval);//继续自动播放
+		}
+	</script>
+</html>

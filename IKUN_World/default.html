@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <link rel="shortcut icon" href="Photo/favicon.ico" />
+    <title>IKUN世界</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="start-overlay" onclick="startSite(event)">
+      <h1 class="start-slogan">点击进入 IKUN 世界</h1>
+      <p>⚠️ 警告：含极度帅气内容及“只因”音效 ⚠️</p>
+    </div>
+
+    <div class="left-controls" id="left-controls">
+      <div class="icon-btn" onclick="openSaveLoad()">💾</div>
+      <div class="icon-btn" onclick="openLeaderboard()">🏆</div>
+    </div>
+
+    <div id="gm-panel" class="gm-panel">
+      <h3 style="color: red">⚠️ GM上帝模式</h3>
+      <button class="gm-btn" onclick="gmAddScore()">加 100w 分</button>
+      <button class="gm-btn" onclick="gmUnlockCards()">获得全图鉴(SSS)</button>
+      <button class="gm-btn" onclick="gmClearBag()">清空背包</button>
+      <button
+        class="gm-btn"
+        onclick="document.getElementById('gm-panel').style.display='none'"
+      >
+        关闭
+      </button>
+    </div>
+
+    <div id="save-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-title">存档管理</div>
+        <div class="modal-body">
+          <p>复制下方代码保存，或粘贴代码读取。</p>
+          <textarea id="save-code"></textarea>
+        </div>
+        <button
+          class="modal-close"
+          style="background: #4caf50"
+          onclick="exportSave()"
+        >
+          生成存档码
+        </button>
+        <button
+          class="modal-close"
+          style="background: #2196f3"
+          onclick="importSave()"
+        >
+          读取存档
+        </button>
+        <button
+          class="modal-close"
+          onclick="document.getElementById('save-modal').style.display='none'"
+        >
+          关闭
+        </button>
+      </div>
+    </div>
+
+    <div id="leaderboard-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-title">全服 IKUN 战力榜</div>
+        <div class="leaderboard-list" id="leaderboard-list"></div>
+        <br />
+        <button
+          class="modal-close"
+          onclick="document.getElementById('leaderboard-modal').style.display='none'"
+        >
+          关闭
+        </button>
+      </div>
+    </div>
+
+    <div id="gacha-overlay" style="display: none">
+      <div class="gacha-box" id="gacha-box" onclick="skipGacha(event)">🎁</div>
+      <div class="gacha-result" id="gacha-result" onclick="closeGacha()">
+        <div class="ssr-title" id="card-rarity-title">✨ 获得卡牌 ✨</div>
+        <div class="result-card-container">
+          <img src="" id="ssr-img" class="ssr-card" alt="Card" />
+        </div>
+        <p style="margin-top: 20px; font-size: 1.2rem; color: #fff">
+          点击任意处关闭
+        </p>
+      </div>
+    </div>
+
+    <div id="bg-container"></div>
+    <div id="quotes-layer"></div>
+
+    <img src="Photo/Basketball.png" id="basketball" alt="篮球" />
+
+    <div class="danmaku-bar" id="danmaku-bar">
+      <input
+        type="text"
+        id="danmaku-input"
+        placeholder="按 Enter 发送弹幕..."
+        onkeydown="if(event.keyCode==13) sendDanmaku()"
+      />
+      <button onclick="sendDanmaku()">🚀 发送</button>
+    </div>
+
+    <div class="keyboard-tips" id="keyboard-tips">
+      <div class="key-item"><span class="key-box">J</span> 召唤神迹</div>
+      <div class="key-item"><span class="key-box">N</span> 下一首</div>
+      <div class="key-item"><span class="key-box">G</span> 篮球巨大化</div>
+    </div>
+
+    <div class="container" id="main-container">
+      <header>
+        <div class="slogan">黄昏见证虔诚的信徒 巅峰诞生虚伪的拥护</div>
+        <h1 id="site-title">IKUN · 世界</h1>
+      </header>
+
+      <div class="glass-panel">
+        <h2>🎵 IKUN 专属播放器</h2>
+        <div class="player-container">
+          <div class="vinyl-wrapper" id="vinyl-wrapper">
+            <div class="vinyl-record" id="vinyl"></div>
+            <div class="tonearm" id="tonearm"></div>
+          </div>
+          <div class="player-controls">
+            <div class="song-title" id="current-song-name">准备播放...</div>
+            <div class="controls-row">
+              <button onclick="prevTrack()">⏮ 上一首</button>
+              <button id="play-btn" onclick="togglePlay()">▶ 播放</button>
+              <button onclick="nextTrack()">下一首 ⏭</button>
+            </div>
+            <div
+              class="controls-row"
+              style="width: 100%; justify-content: center"
+            >
+              <span style="font-size: 0.8rem">进度:</span>
+              <input
+                type="range"
+                id="progress-bar"
+                min="0"
+                value="0"
+                step="0.1"
+              />
+              <span style="font-size: 0.8rem">音量:</span>
+              <input
+                type="range"
+                id="volume-bar"
+                min="0"
+                max="1"
+                step="0.1"
+                value="0.8"
+              />
+            </div>
+          </div>
+        </div>
+        <audio id="main-audio"></audio>
+      </div>
+
+      <div class="glass-panel" id="chicken-game-container">
+        <h2>🐔 功德无量应援鸡</h2>
+        <p>
+          点击小黑子，聆听天籁之音！<br /><span
+            style="font-size: 0.8rem; color: #ffd700"
+            >（彩蛋：拖拽篮球去砸鸡，会有惊喜哦！）</span
+          >
+        </p>
+        <br />
+        <div class="chicken-wrapper">
+          <div class="fire-effect" id="fire-effect"></div>
+          <div id="combo-text">COMBO x0</div>
+          <img
+            src="Photo/应援鸡.png"
+            id="chicken-img"
+            alt="应援鸡"
+            onclick="clickChicken(event)"
+          />
+        </div>
+        <br />
+        <div class="score-box">
+          <span class="score-label">应援值 (自动增长中...)</span>
+          <span class="score-number" id="score">0</span>
+        </div>
+
+        <div class="stats-board">
+          <span class="stat-item"
+            >自动产分:<span id="stat-auto" class="stat-val">0</span>/s</span
+          >
+          <span class="stat-item"
+            >点击得分:<span id="stat-click" class="stat-val">1</span></span
+          >
+          <span class="stat-item"
+            >撞击得分:<span id="stat-collision" class="stat-val"
+              >100</span
+            ></span
+          >
+        </div>
+
+        <div class="badge-container">
+          <div
+            class="badge"
+            id="badge-1"
+            data-title="黑粉头子"
+            onclick="showBadgeDetails('1')"
+          >
+            ⚫
+          </div>
+          <div
+            class="badge"
+            id="badge-2"
+            data-title="真爱粉"
+            onclick="showBadgeDetails('2')"
+          >
+            💖
+          </div>
+          <div
+            class="badge"
+            id="badge-3"
+            data-title="披金成王"
+            onclick="showBadgeDetails('3')"
+          >
+            👑
+          </div>
+          <div
+            class="badge"
+            id="badge-c1"
+            data-title="萌新收藏家"
+            onclick="showBadgeDetails('c1')"
+          >
+            💳
+          </div>
+          <div
+            class="badge"
+            id="badge-c2"
+            data-title="资深收藏家"
+            onclick="showBadgeDetails('c2')"
+          >
+            🗂️
+          </div>
+          <div
+            class="badge"
+            id="badge-c3"
+            data-title="全图鉴霸主"
+            onclick="showBadgeDetails('c3')"
+          >
+            🌟
+          </div>
+        </div>
+        <div class="badge-container">
+          <div
+            class="badge"
+            id="badge-r1"
+            data-title="欧气爆发"
+            onclick="showBadgeDetails('r1')"
+          >
+            🍀
+          </div>
+          <div
+            class="badge"
+            id="badge-r2"
+            data-title="天选之子"
+            onclick="showBadgeDetails('r2')"
+          >
+            🔱
+          </div>
+          <div
+            class="badge"
+            id="badge-r3"
+            data-title="虚空之主"
+            onclick="showBadgeDetails('r3')"
+          >
+            🌌
+          </div>
+          <div
+            class="badge"
+            id="badge-god"
+            data-title="IKUN之神"
+            onclick="showBadgeDetails('god')"
+          >
+            👼
+          </div>
+        </div>
+
+        <div class="shop-container">
+          <div class="shop-item" onclick="buyItem('ball')">
+            <span class="shop-count" id="count-ball">0</span>
+            <span class="shop-icon">🏀</span>
+            <div class="shop-name">爱坤篮球</div>
+            <div class="shop-desc">每秒 +1 应援值</div>
+            <div class="shop-cost" id="cost-ball">💰 50</div>
+          </div>
+          <div class="shop-item" onclick="buyItem('suspender')">
+            <span class="shop-count" id="count-suspender">0</span>
+            <span class="shop-icon">👖</span>
+            <div class="shop-name">背带裤</div>
+            <div class="shop-desc">每秒 +10 应援值</div>
+            <div class="shop-cost" id="cost-suspender">💰 500</div>
+          </div>
+          <div class="shop-item" onclick="buyItem('trainee')">
+            <span class="shop-count" id="count-trainee">0</span>
+            <span class="shop-icon">🕺</span>
+            <div class="shop-name">练习生</div>
+            <div class="shop-desc">点击收益翻倍</div>
+            <div class="shop-cost" id="cost-trainee">💰 1000</div>
+          </div>
+          <div class="shop-item" onclick="buyItem('collision')">
+            <span class="shop-count" id="count-collision">0</span>
+            <span class="shop-icon">💥</span>
+            <div class="shop-name">铁山靠秘籍</div>
+            <div class="shop-desc">撞击得分 +100</div>
+            <div class="shop-cost" id="cost-collision">💰 3000</div>
+          </div>
+
+          <div
+            class="shop-item"
+            style="border-color: #ff00cc; background: rgba(255, 0, 204, 0.1)"
+            onclick="buyGacha()"
+          >
+            <span class="shop-icon">🎁</span>
+            <div class="shop-name" style="color: #ff00cc">神秘盲盒</div>
+            <div class="shop-desc">抽取稀有卡牌</div>
+            <div class="shop-cost">💰 2000</div>
+          </div>
+        </div>
+
+        <button class="reset-btn" onclick="resetScore()">🗑️ 重置应援值</button>
+      </div>
+
+      <div class="glass-panel">
+        <h2>
+          🎴 卡牌收集 (<span id="card-count">3</span>/50) - 总战力:
+          <span id="card-total-score" style="color: #ffd700">30</span>
+        </h2>
+        <div class="gallery-grid" id="card-collection"></div>
+      </div>
+
+      <div class="glass-panel">
+        <h2>🎬 经典 MV 时刻</h2>
+        <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 10px">
+          (播放MV时，背景音乐将自动暂停)
+        </p>
+        <video id="mv-player" controls>
+          <source src="Music_MV/mv.png" type="video/mp4" />
+          你的浏览器不支持视频播放，请更换浏览器。
+        </video>
+      </div>
+
+      <div class="copyright-notice">
+        <p>版权所有&copy;韩山师范学院504宿舍</p>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

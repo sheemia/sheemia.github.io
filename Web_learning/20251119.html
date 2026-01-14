@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>CSS语法</title>
+		<style>
+			*{
+				margin: 10px;
+				padding: 10px;
+				box-sizing: border-box;
+			}
+			body{
+				background-color: lightgoldenrodyellow;
+			}
+			h2{
+				color: blueviolet;
+				border-bottom: 2px solid lightblue;
+			}
+			h2.title{
+				text-align: center;
+			}
+			#intro{
+				background-color: beige;
+			}
+			.story{
+				background-color: white;
+			}
+			.story:nth-child(even){
+				background-color: lightcyan;
+			}
+			a:link{color: blue;}
+			a:visited{color: green;}
+			a:hover{color: red;}
+			a.active{color: black;}
+			p::first-letter{
+				font-size: 1.5em;
+				color: darkblue;
+			}
+			blockquote::before{
+				content: ">>";
+				color: chocolate;
+			}
+			.story>h2{
+				color: coral;
+			}
+			h2+p{
+				text-indent: 2em;
+			}
+		</style>
+	</head>
+	<body>
+		<h2 class="title">经典励志成语故事</h2>
+		<!-- 凿壁借光 -->
+		<div class="story" id="s1">
+			<h2>凿壁借光</h2>
+			<p>匡衡年轻时十分好学。他家里很穷，买不起蜡烛，匡衡晚上想读书的时候，常因没有亮光而发愁。<br />
+			后来，他想了一个办法，就在墙壁上悄悄地凿了一个小孔。让隔壁人家的烛光透过来。<br />
+			就这样，他经常学到深夜，后来成了西汉著名的学者，曾做过汉元帝的丞相。
+			</p>
+			<blockquote>外因（环境和条件）并不是决定性的因素，内因才是事物发展、变化的根据。</blockquote>
+		</div>
+		<!-- 悬梁刺股 -->
+		<div class="story" id="s2">
+			<h2>悬梁刺股</h2>
+			<p>东汉时期，孙敬年轻时勤奋好学，常常读书到深夜。<br />
+			为了防止打瞌睡，他将头发绑在房梁上，一低头就会被扯痛，以此保持清醒。<br />
+			战国时期，苏秦也因学问不深而发奋读书，用锥子刺大腿来提神。</p>
+			<blockquote>勤奋和毅力是成功的基石。</blockquote>
+		</div>
+		<!-- 不耻下问 -->
+		<div class="story" id="s3">
+			<h2>不耻下问</h2>
+			<p>孔子学问渊博，但仍虚心向别人求教。他曾说：“聪明好学，不耻下问，才配叫‘文’。”<br />
+			弟子们感叹：“老师常向别人求教，也并不以为耻辱呀！”</p>
+			<blockquote>虚心好学，肯向一切人学习，是智慧的体现。</blockquote>
+		</div>
+		<!-- 百尺竿头，更进一步 -->
+		<div class="story" id="s4">
+			<h2>百尺竿头，更进一步</h2>
+			<p>宋朝高僧景岑在讲经时说：“百尺竿头不动人，虽然得入未为真。百尺竿头须进步，十方世界是全身。”<br />
+			意为即使已经取得很高的成就，仍需继续努力。</p>
+			<blockquote>成功无止境，努力无终点。</blockquote>
+		</div>
+		<!-- 精诚所至，金石为开 -->
+		<div class="story" id="s5">
+			<h2>精诚所至，金石为开</h2>
+			<p>西汉名将李广曾一箭射入石头，人们请教扬雄，他说：“如果诚心实意，即使像金石那样坚硬的东西也会被感动的。”<br />
+			这就是“精诚所至，金石为开”的由来。</p>
+			<blockquote>真诚和毅力可以战胜一切困难。</blockquote>
+		</div>
+		<!-- 映雪囊萤 -->
+		<div class="story" id="s6">
+			<h2>映雪囊萤</h2>
+			<p>孙康因家贫买不起灯油，冬天借着雪光读书；车胤则捉萤火虫照明，夜以继日地学习。<br />
+			他们的故事成为勤奋学习的典范。</p>
+			<blockquote>无论条件多么艰苦，学习的精神永不熄灭。</blockquote>
+		</div>
+		<p id="intro">了解更多励志故事，请访问：
+			<a href="#" target="_blank">经典成语故事专题</a>。
+		</p>
+		<hr />
+		<ul>
+			<li><a href="#s1">凿壁借光</a></li>
+			<li><a href="#s2">悬梁刺股</a></li>
+			<li><a href="#s3">不耻下问</a></li>
+			<li><a href="#s4">百尺竿头，更进一步</a></li>
+			<li><a href="#s5">精诚所至，金石为开</a></li>
+			<li><a href="#s6">映雪囊萤</a></li>
+		</ul>
+
+	</body>
+</html>

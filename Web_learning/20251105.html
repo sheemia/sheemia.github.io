@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>表单</title>
+	</head>
+	<body>
+		<p><a href="default.html">返回首页</a></p>
+		<form action="">
+			<fieldset>
+				<legend>基本信息</legend>
+			<p>
+				<label for="txtStuNo">学号：</label>
+				<input type="text" name="txtStuNo" id="txtStuNo"
+				placeholder="2025030051XX"pattern="txtStuNo"></p>
+			<p>
+				<label for="txtStuName">姓名：</label>
+				<input type="text" name="txtStuName" id="txtStuName"placeholder="必须输入汉字"required
+				pattern="txtStuName"></p>
+			</fieldset>
+			<fieldset>
+				<legend>账号信息</legend>
+				<p>
+					<label for="email">邮箱：</label>
+					<input type="email" name="email" id="email"value="@163.com"required>
+				</p>
+				<p>
+					<label for="password">密码：</label>
+					<input type="password" name="password" id="password"value="123456"required>
+				</p>
+				<p>
+					<label for="tel">电话：</label>
+					<input type="tel" name="tel" id="tel"value="10086"required>
+				</p>
+				<p>
+					<label for="url">网址：</label>
+					<input type="url" name="url" id="url"value="baidu.com"requiredtmjdgfgppplqaplaplaidnrndjwkks>
+				</p>
+				<p>
+					<label for="file">头像：</label>
+					<input type="file" name="file" id="file"accept="image/*">
+				</p>
+			</fieldset>
+			<fieldset>
+				<legend>个人信息</legend>
+				<p>
+					<label for="">性别：</label>
+					<input type="radio" name="gender" id="male"checked><label for="male">男</label>
+					<input type="radio" name="gender" id="female"><label for="female">女</label>
+				</p>
+				<p>
+					<label for="">国家：</label>
+					<select name="select"multiple>
+						<optgroup label="亚洲">
+							<option value="cn"checked>中国</option>
+							<option value="jp">日本</option>
+						</optgroup>
+						<optgroup label="欧洲">
+							<option value="gb">英国</option>
+							<option value="fr">法国</option>
+						</optgroup>
+						<optgroup label="美洲">
+							<option value="us">美国</option>
+							<option value="ca">加拿大</option>
+						</optgroup>
+					</select>
+				</p>
+				<p>
+					<label for="date">生日：</label>
+					<input type="date" name="date" id="date"value="2007-01-01">
+					
+				</p>
+				<p>
+					<label for="number">身高：</label>
+					<input type="number" name="number" id="number" value="180" max="200" min="100" step="1"/>厘米
+				</p>
+				<p>
+					<label for="">爱好：</label>
+					<input type="checkbox" name="favs" id="sport" checked/><label for="sport">运动</label>
+					<input type="checkbox" name="favs" id="music" /><label for="music">音乐</label>
+					<input type="checkbox" name="favs" id="read" /><label for="read">阅读</label>					
+				</p>
+			</fieldset>
+			<fieldset>
+				<legend>其他信息</legend>
+				<p>
+					<label for="">喜欢颜色：</label>
+					<input type="color" name="color" id="color" oninput="output.value=this.value"/>
+				</p>
+				<p>
+					<datalist id="datalist">
+						<option>WEB前端</option>
+						<option>人工智能</option>
+						<option>机器人技术</option>
+					</datalist>
+					<label for="search">百度搜索：</label>
+					<input type="search" name="search" id="search" list="datalist" />
+				</p>
+				<p>
+					<label for="">自我感觉：</label>
+					<input type="range" name="range" id="range"
+					oninput="output.value=thie.value" />
+					<output id="output">50</output>
+				</p>
+			</fieldset>
+			<fieldset>
+				<legend>自我简介</legend>
+				<p>
+					<textarea name="txt" id="txt" cols="30" rows="10"></textarea>
+				</p>
+			</fieldset>
+			<p><input type="submit" value="提交"><input type="reset" value="重填" /><input type="button" value="检查" /></p>
+		</form>
+	</body>
+</html>

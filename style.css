@@ -1,0 +1,508 @@
+/* --- 1. 核心配色 --- */
+:root {
+  --bg-color: #020408;
+  --text-primary: #e0faff;
+  --text-secondary: #8aaacc;
+  --accent-cyan: #00f2ff;
+  --accent-blue: #0066ff;
+  --glass-bg: rgba(5, 15, 30, 0.75);
+  --border-color: rgba(0, 242, 255, 0.3);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@media (pointer: fine) {
+  * {
+    cursor: none;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Montserrat", "Noto Sans SC", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+/* --- 光标系统 --- */
+.cursor-dot,
+.cursor-circle {
+  pointer-events: none;
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+}
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent-cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent-cyan);
+}
+.cursor-circle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--accent-cyan);
+  border-radius: 50%;
+  transition: width 0.3s, height 0.3s, background-color 0.3s;
+  opacity: 0.6;
+  z-index: 9998;
+}
+/* 平板/手机端物理隐藏光标 */
+@media (hover: none) and (pointer: coarse) {
+  .cursor-dot,
+  .cursor-circle {
+    display: none !important;
+  }
+}
+
+/* --- 背景 --- */
+#canvas-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* --- 导航栏 --- */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 80px;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  background: linear-gradient(to bottom, rgba(2, 4, 8, 0.95), transparent);
+  transition: 0.3s;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 1001;
+}
+
+.logo-img {
+  height: 40px;
+  width: auto;
+}
+
+.logo-text {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--accent-cyan);
+  letter-spacing: 1px;
+  text-shadow: 0 0 15px rgba(0, 242, 255, 0.6);
+  font-style: italic;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  gap: 40px;
+  margin-right: 160px;
+}
+.nav-links li {
+  list-style: none;
+}
+.nav-links a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  position: relative;
+  transition: 0.3s;
+  font-weight: 600;
+}
+.nav-links a:hover {
+  color: var(--accent-cyan);
+}
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent-cyan);
+  transition: 0.3s;
+}
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+.lang-btn {
+  background: transparent;
+  border: 1px solid var(--accent-cyan);
+  color: var(--accent-cyan);
+  padding: 6px 16px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: 0.3s;
+  letter-spacing: 1px;
+}
+.lang-btn:hover {
+  background: var(--accent-cyan);
+  color: #000;
+  box-shadow: 0 0 15px var(--accent-cyan);
+}
+
+.desktop-lang-btn {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1002;
+}
+.mobile-lang-btn-li {
+  display: none;
+}
+
+/* --- 汉堡菜单 --- */
+.hamburger {
+  display: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 2000;
+}
+.hamburger span {
+  width: 30px;
+  height: 3px;
+  background-color: var(--accent-cyan);
+  transition: 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+  border-radius: 2px;
+}
+.hamburger.active span:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+@media (max-width: 900px) {
+  /* 手机端彻底隐藏光标 */
+  .cursor-dot,
+  .cursor-circle {
+    display: none !important;
+  }
+
+  nav {
+    padding: 15px 20px;
+    background: rgba(2, 4, 8, 0.95);
+  }
+  .desktop-lang-btn {
+    display: none;
+  }
+  .hamburger {
+    display: flex;
+  }
+  .mobile-lang-btn-li {
+    display: block;
+  }
+  .nav-links {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(2, 4, 8, 0.98);
+    backdrop-filter: blur(10px);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-right: 0;
+    transform: translateX(100%);
+    transition: transform 0.4s ease-in-out;
+    z-index: 1500;
+  }
+  .nav-links.active {
+    transform: translateX(0);
+  }
+  .nav-links a {
+    font-size: 1.5rem;
+  }
+}
+
+/* --- 通用版块 --- */
+section {
+  min-height: 100vh;
+  padding: 100px 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.section-title {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  font-size: 3rem;
+  margin-bottom: 50px;
+  background: linear-gradient(90deg, #fff, var(--text-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0;
+  transform: translateY(30px);
+  border-left: 5px solid var(--accent-cyan);
+  padding-left: 20px;
+  letter-spacing: -1px;
+}
+
+#home {
+  align-items: flex-start;
+}
+.hero-title {
+  font-family: "Montserrat", sans-serif;
+  font-size: 5rem;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  letter-spacing: -2px;
+}
+.hero-title span {
+  color: var(--accent-cyan);
+  text-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+}
+.type-wrapper {
+  font-size: 1.5rem;
+  color: var(--accent-blue);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  margin-bottom: 40px;
+  min-height: 30px;
+  letter-spacing: 1px;
+}
+
+.about-content {
+  display: flex;
+  gap: 50px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.about-text {
+  flex: 1;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  min-width: 300px;
+  font-weight: 500;
+}
+.about-stats {
+  display: flex;
+  gap: 40px;
+}
+.stat-item h3 {
+  font-size: 3.5rem;
+  color: var(--accent-cyan);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  margin-bottom: 5px;
+}
+.stat-item p {
+  font-size: 0.9rem;
+  color: #fff;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+  width: 100%;
+}
+.project-card {
+  display: block;
+  text-decoration: none;
+  background: var(--glass-bg);
+  border: 1px solid var(--border-color);
+  padding: 35px;
+  transition: 0.4s;
+  opacity: 0;
+  transform: translateY(50px);
+  position: relative;
+  overflow: hidden;
+}
+.project-card:hover {
+  transform: translateY(-10px);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 10px 40px rgba(0, 242, 255, 0.15);
+}
+.project-card h3 {
+  color: var(--accent-cyan);
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.project-card p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.awards-list {
+  width: 100%;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+.award-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: 0.3s;
+  opacity: 0;
+  transform: translateX(-30px);
+}
+.award-item:hover {
+  padding-left: 40px;
+  background: linear-gradient(90deg, rgba(0, 242, 255, 0.1), transparent);
+  border-left: 3px solid var(--accent-cyan);
+}
+.award-year {
+  font-family: "Montserrat", sans-serif;
+  color: var(--accent-blue);
+  font-weight: 800;
+  font-size: 1.2rem;
+  min-width: 100px;
+}
+.award-title {
+  font-size: 1.2rem;
+  color: #fff;
+  margin-left: 20px;
+  flex: 1;
+  font-weight: 600;
+}
+/* 奖项等级优化 */
+.award-desc {
+  font-size: 1.1rem; /* 调大字体 */
+  color: var(--accent-cyan);
+  text-align: right;
+  min-width: 120px;
+  font-weight: 800; /* 加粗 */
+  font-family: "Montserrat", sans-serif;
+}
+
+.social-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.social-btn {
+  padding: 20px 30px;
+  border: 1px solid var(--border-color);
+  color: var(--accent-cyan);
+  text-decoration: none;
+  font-family: "Montserrat", sans-serif;
+  letter-spacing: 1px;
+  font-weight: 800;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  scale: 0.9;
+  background: rgba(0, 0, 0, 0.3);
+  flex: 1;
+  text-align: center;
+  min-width: 140px;
+  text-transform: uppercase;
+}
+.social-btn:hover {
+  color: #000;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 30px var(--accent-cyan);
+}
+
+/* 手机端联系方式居中 */
+.contact-box {
+  text-align: center;
+  border: 1px solid var(--border-color);
+  padding: 60px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+
+  /* Flex 居中大法 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.email-text {
+  font-size: clamp(1.2rem, 5vw, 3rem);
+  color: #fff;
+  font-weight: 800;
+  word-break: break-all;
+  transition: 0.3s;
+  user-select: text;
+  font-family: "Montserrat", sans-serif;
+  letter-spacing: 1px;
+}
+.email-text:hover {
+  color: var(--accent-cyan);
+  text-shadow: 0 0 30px var(--accent-cyan);
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 30px;
+  }
+  .hero-title {
+    font-size: 3rem;
+  }
+  .type-wrapper {
+    font-size: 1rem;
+  }
+  section {
+    padding: 80px 5%;
+  }
+  .about-content {
+    gap: 30px;
+  }
+  .award-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  .award-title {
+    margin-left: 0;
+    font-size: 1.1rem;
+  }
+  .award-desc {
+    text-align: left;
+    font-size: 1rem;
+    margin-top: 5px;
+  }
+  .contact-box {
+    padding: 30px 20px;
+  }
+}

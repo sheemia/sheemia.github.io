@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScriptwork</title>
+    <style>
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .btn-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 5px 15px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="nameText">202503005131 陈俊洋</h1>
+    <div class="btn-group">
+        <button onclick="changeColor('red')">红色</button>
+        <button onclick="changeColor('green')">绿色</button>
+        <button onclick="changeColor('blue')">蓝色</button>
+    </div>
+
+    <script>
+        // 定义改变颜色的函数
+        function changeColor(color) {
+            var textElement = document.getElementById("nameText");
+            textElement.style.color = color;
+        }
+    </script>
+</body>
+</html>

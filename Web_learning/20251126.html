@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>常用样式</title>
+		<style>
+			* {
+				margin: 0px auto;
+				padding: 0;
+				box-sizing: border-box;
+			}
+			#container{
+				width: 760px;
+				box-shadow: 10px 10px 10px #930;
+				border-style: solid;
+				border-image-source: url('image/numbers.png');
+				border-image-slice: 33%;
+				border-width: 41px;
+				border-image-outset: 0;
+				border-image-repeat: stretch;
+			}
+			#title{
+				height: 30px;
+				background: url('image/title-bg.gif') repeat-x;
+				text-align: center;
+				
+			}
+			tbody tr:nth-child(odd) {
+				background-color: lightblue;
+			}
+			span{
+				font-style: italic;
+				font-weight: bold;
+				color: #06f;
+			}
+			#title h1{
+				font: bold 14px "幼圆";
+				line-height: 30px;
+			}
+			#banner h1 {
+				width: 200px;
+				height: 80px;
+				line-height: 80px;
+				font-family: kastlerFont;
+			}
+			@font-face {
+				font-family: kastlerFont;
+				src: url('fonts/kastler.ttf');
+			}
+			main{
+				width: 600x;
+				margin: 0 auto;
+				font: 14px/2em "宋体";
+				color:#666；
+				text-align:left;
+				text-indent: 2em;
+			}
+			#title h1{
+				font: bold 14px "幼圆";
+				line-height: 30px;
+				text-shadow: 2px 3px 4px red;
+				letter-spacing: 5px;
+			}
+			footer{
+				font-size: 14px;
+				line-height: 1.5em;
+				list-style-image: url('image/bullet.gif');
+			}
+			ul{
+				list-style-position: inside;
+			}
+			#banner h1{
+				width: 200px;
+				height: 80px;
+				line-height: 80px;
+				font-family: kastlerFont;
+				transition: transform 3s;
+			}
+			#banner h1:hover {
+				transform: translate(10px) skew(30deg) rotate(180deg) scale(1.5);
+			}
+			header p {
+				animation: pulse 2s infinite;
+	
+			}
+			@keyframes pulse {
+				0%{
+					transform: scale(1);
+				}
+				50%{
+					transform: scale(1.05);
+				}
+					
+				100%{
+					transform: scale(1);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<!--最外层-->
+			<header>
+				<!--页眉-->
+				<div id="title">
+					<h1>Web前端开发技术</h1>
+				</div>
+				<div id="banner">
+					<h1>Web Design</h1>
+				</div>
+				<p>04月02日10:06 前端学习网</p>
+			</header>
+			<main>
+				<!--内容-->
+				<p> Web前端开发技术包含三部分：HTML、CSS、JS。
+					<span>HTML</span>
+					用于设定网页结构，也就是网页包括哪些内容。
+					<span>CSS</span>
+					用于设定网页样式，主要包括页面元素的样式和网页布局。
+					<span>JS</span>
+					是一种客户端脚本语言，它能够设定网页行为，用于完成网页一些动态效果、与用户的交互效果。
+				</p>
+				<table>
+					<!-- 表格开始 -->
+					<caption>名词解释</caption> <!-- 标题 -->
+					<thead>
+						<!-- 表头 -->
+						<tr>
+							<!-- 行 -->
+							<th> 名词 </th> <!-- 表头单元格 -->
+							<th> 解释 </th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- 表体 -->
+						<tr>
+							<!-- 第一行 -->
+							<td>HTML</td><!-- 数据单元格 -->
+							<td>HyperText Markup Language超文本标记语言</td>
+		
+						</tr>
+						<tr>
+							<!-- 第二行 -->
+							<td>CSS</td>
+							<td>Cascading Style Sheets层叠样式表</td>
+						</tr>
+						<tr>
+							<!-- 第三行 -->
+							<td>JS</td>
+							<td>JavaScript语言</td>
+						</tr>
+					</tbody>
+				</table>
+			</main>
+			<!--内容结束-->
+			<footer>
+				<!--页脚-->
+				<p>相关阅读:</p>
+				<ul>
+					<!--虚拟超链接列表-->
+					<li><a href="#">Web前端开发标准</a></li>
+					<li><a href="#">Web前端开发工具</a></li>
+				</ul>
+			</footer>
+		</div>
+
+	</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>BMI计算器</title>
+		<style>
+			body {
+				max-width: 500px;
+				margin: 0 auto;
+				padding: 20px;
+				line-height: 1.6;
+			}
+
+			h1 {
+				color: #2c3e50;
+				text-align: center;
+			}
+
+			.input-group {
+				margin-bottom: 15px;
+			}
+
+			label {
+				display: inline-block;
+				width: 100px;
+			}
+
+			input {
+				padding: 8px;
+				width: 150px;
+			}
+
+			button {
+				background-color: #3498db;
+				color: white;
+				border: none;
+				padding: 10px 20px;
+				cursor: pointer;
+				font-size: 16px;
+				border-radius: 5px;
+				display: block;
+				margin: 20px auto;
+			}
+
+			button:hover {
+				background-color: #2980b9;
+			}
+
+			#result {
+				margin-top: 20px;
+				padding: 15px;
+				border-radius: 5px;
+				background-color: #ecf0f1;
+			}
+
+			.bmi-value {
+				font-size: 24px;
+				font-weight: bold;
+				margin: 10px 0;
+			}
+
+			.underweight {
+				color: #3498db;
+			}
+
+			.normal {
+				color: #2ecc71;
+			}
+
+			.overweight {
+				color: #f39c12;
+			}
+
+			.obese {
+				color: #e74c3c;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>BMI计算器</h1>
+
+		<div class="input-group">
+			<label for="height">身高(cm):</label>
+			<input type="number" id="height" min="100" max="250" placeholder="例如: 170">
+		</div>
+
+		<div class="input-group">
+			<label for="weight">体重(kg):</label>
+			<input type="number" id="weight" min="30" max="200" placeholder="例如: 65">
+		</div>
+
+		<button onclick="calculateBMI()">计算BMI</button>
+
+		<div id="result">
+			<p>请输入您的身高和体重，然后点击计算按钮</p>
+		</div>
+		<p>BMI分类标准：</p>
+		<ul>
+			<li>偏瘦：BMI &lt; 18.5</li>
+			<li>正常：BMI 18.5 ≤ BMI &lt; 24</li>
+			<li>超重：BMI 24 ≤ BMI &lt; 28</li>
+			<li>肥胖：BMI ≥ 28</li>
+		</ul>
+		<script>
+			// 计算BMI的主函数
+			function calculateBMI() {
+				let height = parseFloat(document.getElementById('height').value) / 100;
+				let weight = parseFloat(document.getElementById('weight').value);
+				let bmi = (weight / (height * height)).toFixed(1);
+				let status = "";
+				let stClass = "";
+				if(bmi < 18.5){
+					status = "偏瘦";
+					stClass = "underweight";
+				}else if(bmi >= 18.5 && bmi < 24){
+					status = "正常";
+					stClass = "normal";
+				}else if(bmi >= 24 && bmi < 28){
+					status = "过重";
+					stClass = "overweight";
+				}else{
+					status = "肥胖";
+					stClass = "obese";
+				}
+				let resultDiv = document.getElementById('result');
+				resultDiv.innerHTML = `
+					<h3>您的BMI结果：<h3>
+					<p class='bmi-value ${stClass}'>${bmi}</p>
+					<p>健康状态：<span class='${stClass}'>${status}</span></p>
+				`;
+			}
+		</script>
+	</body>
+</html>

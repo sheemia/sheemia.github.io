@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>定位和布局</title>
+		<style>
+			/* 基础样式 */
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				line-height: 1.6;
+				padding-top: 60px;
+				/* 为固定导航栏留出空间 */
+			}
+
+			/* 1. 固定定位 - 顶部导航栏 */
+			.navbar {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				background-color: #333;
+				color: white;
+				padding: 15px 20px;
+				z-index: 1000;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.logo {
+				font-size: 1.5rem;
+				font-weight: bold;
+			}
+
+			.nav-links {
+				display: flex;
+				list-style: none;
+			}
+
+			.nav-links li {
+				margin-left: 20px;
+			}
+
+			.nav-links a {
+				color: white;
+				text-decoration: none;
+			}
+
+			/* 2. 绝对定位 - 轮播图 */
+			.carousel {
+				position: relative;
+				height: 400px;
+				overflow: hidden;
+				margin-bottom: 30px;
+			}
+
+			.carousel-item {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				opacity: 0;
+				transition: opacity 1s ease-in-out;
+				background-size: cover;
+				background-position: center;
+			}
+
+			.carousel-item.active {
+				opacity: 1;
+			}
+
+			.carousel-caption {
+				position: absolute;
+				bottom: 20px;
+				left: 20px;
+				background-color: rgba(0, 0, 0, 0.7);
+				color: white;
+				padding: 15px;
+				max-width: 50%;
+			}
+
+			/* 3. 网格布局 - 主要内容区 */
+			.main-container {
+				display: grid;
+				grid-template-columns: 2fr 1fr;
+				gap: 30px;
+				padding: 0 20px;
+				max-width: 1200px;
+				margin: 0 auto;
+			}
+
+			.news-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+				gap: 20px;
+			}
+
+			.news-card {
+				border: 1px solid #ddd;
+				border-radius: 5px;
+				overflow: hidden;
+				transition: transform 0.3s;
+			}
+
+			.news-card:hover {
+				transform: translateY(-5px);
+			}
+
+			.news-card img {
+				width: 100%;
+				height: 200px;
+				object-fit: cover;
+			}
+
+			.news-content {
+				padding: 15px;
+			}
+
+			/* 4. 弹性布局 - 侧边栏 */
+			.sidebar {
+				display: flex;
+				flex-direction: column;
+				gap: 20px;
+			}
+
+			.sidebar-widget {
+				background-color: #f5f5f5;
+				padding: 20px;
+				border-radius: 5px;
+			}
+
+			.sidebar-widget input {
+				width: 100%;
+				padding: 8px;
+				margin-top: 10px;
+			}
+
+			.sidebar-widget button {
+				margin-top: 10px;
+				padding: 8px 15px;
+				background: #333;
+				color: white;
+				border: none;
+			}
+
+			.popular-list {
+				list-style: none;
+			}
+
+			.popular-list li {
+				padding: 10px 0;
+				border-bottom: 1px solid #ddd;
+				display: flex;
+				align-items: center;
+			}
+
+			.popular-list li:last-child {
+				border-bottom: none;
+			}
+
+			.popular-list .rank {
+				background-color: #333;
+				color: white;
+				width: 25px;
+				height: 25px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border-radius: 50%;
+				margin-right: 10px;
+				flex-shrink: 0;
+			}
+
+			/* 5. 粘性定位 - 页脚 */
+			.footer {
+				position: sticky;
+				bottom: 0;
+				background-color: #333;
+				color: white;
+				text-align: center;
+				padding: 20px;
+				margin-top: 30px;
+			}
+
+			/* 响应式设计 */
+			@media (max-width: 768px) {
+				.main-container {
+					grid-template-columns: 1fr;
+				}
+
+				.navbar {
+					flex-direction: column;
+					padding: 10px;
+				}
+
+				.nav-links {
+					margin-top: 10px;
+					flex-wrap: wrap;
+					justify-content: center;
+				}
+
+				.nav-links li {
+					margin: 5px 10px;
+				}
+
+				.carousel {
+					height: 300px;
+				}
+
+				.carousel-caption {
+					max-width: 80%;
+				}
+			}
+
+			@media (max-width: 480px) {
+				.news-grid {
+					grid-template-columns: 1fr;
+				}
+
+				.carousel {
+					height: 200px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 1. 固定定位 - 顶部导航栏 -->
+		<nav class="navbar">
+			<div class="logo">韩山新闻</div>
+			<ul class="nav-links">
+				<li><a href="default.html">首页</a></li>
+				<li><a href="#">综合</a></li>
+				<li><a href="#">教学</a></li>
+				<li><a href="#">科研</a></li>
+				<li><a href="#">文化</a></li>
+			</ul>
+		</nav>
+
+		<!-- 2. 绝对定位 - 轮播图 -->
+		<div class="carousel">
+			<div class="carousel-item active" style="background-image: url('image/carousel0.jpg')">
+				<div class="carousel-caption">
+					<h3>高质量党建引领学校高质量发展</h3>
+					<p>学校召开高质量党建引领学校高质量发展暨2025年春季学期工作会议</p>
+				</div>
+			</div>
+			<div class="carousel-item" style="background-image: url('image/carousel1.jpg')">
+				<div class="carousel-caption">
+					<h3>砥砺奋进三甲子 弦歌不辍谱新章</h3>
+					<p>学校举行甲子文化广场落成暨“韩师铭”揭幕仪式</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- 3. 网格布局 - 主要内容区 -->
+		<div class="main-container">
+			<main class="news-section">
+				<h2>最新新闻</h2>
+				<div class="news-grid">
+					<article class="news-card">
+						<img src="image/hot0.jpg" alt="新闻图片">
+						<div class="news-content">
+							<h3>武装部党支部开展主题党日活动</h3>
+							<p>武装部党支部在潮州市西湖公园革命英雄烈士纪念碑前，组织开展“缅怀革命先烈，弘扬爱国主义精神”主题党日活动...</p>
+						</div>
+					</article>
+					<article class="news-card">
+						<img src="image/hot1.jpg" alt="新闻图片">
+						<div class="news-content">
+							<h3>“缅怀先烈 学习院士精神”</h3>
+							<p>政法学院党总支组织该院学生党员及入党积极分子，前往揭阳市揭东区黄旭华故居和汾水战役纪念馆开展主题党日活动...</p>
+						</div>
+					</article>
+					<article class="news-card">
+						<img src="image/hot2.jpg" alt="新闻图片">
+						<div class="news-content">
+							<h3>大学生心理危机识别与干预</h3>
+							<p>通过一系列工作实例、新闻热点报道，强调了学生心理危机识别与干预的重要性，分享了识别心理危机的信号...</p>
+						</div>
+					</article>
+				</div>
+			</main>
+
+			<!-- 4. 弹性布局 - 侧边栏 -->
+			<aside class="sidebar">
+				<div class="sidebar-widget">
+					<h3>热门新闻</h3>
+					<ul class="popular-list">
+						<li><span class="rank">1</span> 韩师再颁“陈北国际交流奖学金”</li>
+						<li><span class="rank">2</span> 校际联动探访潮州左联革命遗址</li>
+						<li><span class="rank">3</span> 韩师开展“南粤左联红色研学”实践活动</li>
+						<li><span class="rank">4</span> 校地聚力促发展 “双百行动”见成效</li>
+						<li><span class="rank">5</span> “高校+非遗”展示“金灶味道”</li>
+					</ul>
+				</div>
+				<div class="sidebar-widget">
+					<h3>订阅我们</h3>
+					<p>订阅韩山新闻简报，获取学校最新资讯</p>
+					<input type="email" placeholder="输入您的邮箱">
+					<button>订阅</button>
+				</div>
+			</aside>
+		</div>
+
+		<!-- 5. 粘性定位 - 页脚 -->
+		<footer class="footer">
+			<p>&copy; 2025 韩山新闻门户网站. 保留所有权利.</p>
+		</footer>
+	</body>
+	<script>
+		let currentSlide = 0;
+		const slides = document.querySelectorAll('.carousel-item');
+
+		function showSlide(n) {
+			slides.forEach(slide => slide.classList.remove('active'));
+			currentSlide = (n + slides.length) % slides.length;
+			slides[currentSlide].classList.add('active');
+		}
+
+		function nextSlide() {
+			showSlide(currentSlide + 1);
+		}
+
+		setInterval(nextSlide, 2000);
+	</script>
+</html>

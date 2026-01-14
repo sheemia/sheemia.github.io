@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEB前端学习日记</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* 调整基础变量，让文字在亮背景上也能看清 */
+            --bg-dark: #050505;
+            --card-bg: rgba(10, 10, 20, 0.65); /* 卡片背景加深一点，提升对比度 */
+            --card-border: rgba(255, 255, 255, 0.1);
+            --primary: #00f2ff; /* 青色霓虹 */
+            --secondary: #ff0055; /* 玫红霓虹 */
+            --text-main: #ffffff;
+            --text-muted: #aabccd;
+            --grid-color: rgba(0, 242, 255, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* 隐藏默认鼠标 */
+        }
+
+        body {
+            background-color: #000;
+            font-family: 'Noto Sans SC', sans-serif;
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* --- 1. 核心升级：炫酷极光背景 --- */
+        .cyber-background {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background: #080a10;
+        }
+
+        /* 巨大的流动光斑（极光效果） */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px); /* 强力模糊，制造光晕感 */
+            opacity: 0.6;
+            animation: float-glow 10s infinite alternate ease-in-out;
+            z-index: 1;
+        }
+
+        .orb-1 {
+            width: 60vw; height: 60vw;
+            background: radial-gradient(circle, var(--primary), transparent 70%);
+            top: -20%; left: -20%;
+            animation-duration: 15s;
+        }
+
+        .orb-2 {
+            width: 50vw; height: 50vw;
+            background: radial-gradient(circle, var(--secondary), transparent 70%);
+            bottom: -10%; right: -10%;
+            animation-duration: 12s;
+            animation-delay: -2s;
+        }
+
+        .orb-3 {
+            width: 40vw; height: 40vw;
+            background: radial-gradient(circle, #7000ff, transparent 70%);
+            top: 40%; left: 40%;
+            transform: translate(-50%, -50%);
+            animation-name: pulse-glow;
+            animation-duration: 8s;
+        }
+
+        /* 移动的地面网格 - 更亮更立体 */
+        .grid-plane {
+            position: absolute;
+            bottom: -50%;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            z-index: 2; /* 在光斑之上 */
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 60px 60px;
+            transform: perspective(300px) rotateX(70deg); /* 透视感更强 */
+            animation: grid-move 3s linear infinite;
+            /* 边缘虚化 */
+            mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 50%);
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 50%);
+            box-shadow: 0 0 100px rgba(0, 242, 255, 0.2);
+        }
+
+        /* 漂浮的粒子 - 增加闪烁 */
+        .stars {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 3;
+            background-image: 
+                radial-gradient(2px 2px at 50px 50px, #fff, rgba(0,0,0,0)),
+                radial-gradient(3px 3px at 120px 250px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 200px 80px, #fff, rgba(0,0,0,0));
+            background-size: 300px 300px;
+            animation: stars-move 60s linear infinite;
+            opacity: 0.7;
+        }
+        
+        /* 噪点纹理层（增加复古科技感） */
+        .noise-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 4;
+            opacity: 0.05;
+            pointer-events: none;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuNjUiIG51bU9jdGF2ZXM9IjMiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjbm9pc2UpIiBvcGFjaXR5PSIxIi8+PC9zdmc+');
+        }
+
+        /* --- 自定义光标 --- */
+        .cursor-dot {
+            width: 8px; height: 8px; background-color: var(--primary);
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; z-index: 9999; pointer-events: none;
+            box-shadow: 0 0 10px var(--primary);
+        }
+        .cursor-outline {
+            width: 40px; height: 40px; border: 1px solid var(--primary);
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; z-index: 9998; pointer-events: none;
+            transition: all 0.1s ease-out; opacity: 0.5;
+        }
+
+        /* --- 头部 Hero 区域 --- */
+        header {
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 1;
+            position: relative;
+        }
+
+        .glitch-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            position: relative;
+            text-shadow: 3px 0px 0px rgba(255,0,85,0.8), -3px 0px 0px rgba(0,242,255,0.8);
+            animation: glitch-skew 3s infinite alternate-reverse;
+        }
+        
+        .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-top: 20px;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
+        }
+
+        /* --- 核心布局 --- */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px 100px;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- 左侧：3D 个人卡片 --- */
+        .profile-card-wrap {
+            position: sticky;
+            top: 40px;
+            perspective: 1000px;
+        }
+        
+        .profile-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px); /* 模糊度增加，让背后光斑好看 */
+            border: 1px solid var(--card-border);
+            border-top: 1px solid rgba(255,255,255,0.2);
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .avatar-box {
+            position: relative;
+            width: 130px; height: 130px;
+            margin: 0 auto 30px;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .avatar-ring {
+            position: absolute; width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 2px dashed var(--primary);
+            box-shadow: 0 0 15px var(--primary);
+            animation: spin 20s linear infinite;
+        }
+
+        .avatar-img-wrap {
+            width: 110px; height: 110px;
+            border-radius: 50%; overflow: hidden;
+            border: 3px solid rgba(255,255,255,0.1);
+            background: #fff; position: relative; z-index: 2;
+        }
+        
+        .avatar-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-name { font-size: 1.8rem; margin-bottom: 5px; font-weight: 700; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+
+        /* 技能条 */
+        .skill-section { margin-top: 30px; text-align: left; }
+        .skill-bar { margin-bottom: 15px; }
+        .skill-info {
+            display: flex; justify-content: space-between;
+            font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; font-family: 'JetBrains Mono';
+        }
+        .progress-track {
+            height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; width: 0;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            box-shadow: 0 0 10px var(--primary);
+            transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* 全息二维码 */
+        .hologram-box {
+            margin-top: 40px; position: relative; padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--primary);
+            border-radius: 12px; overflow: hidden;
+        }
+        .hologram-box::after {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(transparent, rgba(0, 242, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            animation: hologram-scan 3s infinite linear; pointer-events: none;
+        }
+        .qr-img { width: 100%; display: block; opacity: 0.9; }
+
+        /* --- 右侧：日志列表 --- */
+        .diary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            align-content: start;
+        }
+
+        .diary-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-top: 1px solid rgba(255,255,255,0.15); /* 顶部高光 */
+            border-radius: 16px;
+            padding: 25px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            min-height: 160px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            opacity: 0; transform: translateY(50px);
+            backdrop-filter: blur(15px); /* 毛玻璃让背景颜色透过来 */
+        }
+        
+        .diary-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 242, 255, 0.15);
+        }
+
+        .card-meta {
+            font-family: 'JetBrains Mono'; font-size: 0.85rem; color: var(--primary); margin-bottom: 10px;
+        }
+        .card-title {
+            font-size: 1.25rem; font-weight: 700; line-height: 1.4; flex-grow: 1;
+        }
+        
+        .card-action { margin-top: 20px; text-align: right; }
+
+        .card-status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono';
+            letter-spacing: 1px;
+        }
+
+        .btn-cyber {
+            display: inline-block; text-decoration: none;
+            padding: 8px 20px; color: var(--primary); border: 1px solid var(--primary);
+            border-radius: 4px; font-size: 0.9rem; font-family: 'JetBrains Mono';
+            transition: 0.3s; position: relative; overflow: hidden; z-index: 1;
+        }
+        .btn-cyber::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 0%;
+            background-color: var(--primary); transition: 0.3s; z-index: -1;
+        }
+        .btn-cyber:hover { color: #000; }
+        .btn-cyber:hover::after { height: 100%; }
+
+        /* 动画关键帧 */
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes hologram-scan { 0% { transform: translateY(-100%) rotate(45deg); } 100% { transform: translateY(100%) rotate(45deg); } }
+        @keyframes glitch-skew {
+            0%, 100% { transform: skew(0deg); }
+            20% { transform: skew(-2deg); }
+            40% { transform: skew(2deg); }
+        }
+        
+        /* 改进的网格移动动画 */
+        @keyframes grid-move {
+            0% { transform: perspective(300px) rotateX(70deg) translateY(0); }
+            100% { transform: perspective(300px) rotateX(70deg) translateY(60px); }
+        }
+        
+        @keyframes stars-move {
+            from { transform: translateY(0); }
+            to { transform: translateY(1000px); }
+        }
+
+        /* 核心：光斑浮动动画 */
+        @keyframes float-glow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 40px) scale(1.1); }
+        }
+        @keyframes pulse-glow {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.7; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
+        }
+
+        @media (max-width: 900px) {
+            .main-container { grid-template-columns: 1fr; gap: 40px; }
+            .profile-card-wrap { position: relative; top: 0; max-width: 500px; margin: 0 auto; }
+            header { height: 40vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cyber-background">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+        <div class="grid-plane"></div>
+        <div class="stars"></div>
+        <div class="noise-overlay"></div>
+    </div>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <header>
+        <h1 class="glitch-title">WEB前端学习日记</h1>
+        <div class="subtitle">版权所有©陈俊洋 202503005131</div>
+    </header>
+
+    <div class="main-container">
+        <aside class="profile-card-wrap" id="tiltWrapper">
+            <div class="profile-card" id="tiltCard">
+                <div class="avatar-box">
+                    <div class="avatar-ring"></div>
+                    <div class="avatar-img-wrap">
+                        <img src="photo/favicon.ico" alt="Avatar">
+                    </div>
+                </div>
+                
+                <h2 class="profile-name">陈俊洋</h2>
+                <p style="color: var(--text-muted); font-family: 'JetBrains Mono';">ID: 202503005131</p>
+                
+                <div class="skill-section">
+                    <div class="skill-bar">
+                        <div class="skill-info"><span>HTML</span><span>95%</span></div>
+                        <div class="progress-track"><div class="progress-fill" data-width="95%"></div></div>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-info"><span>CSS</span><span>90%</span></div>
+                        <div class="progress-track"><div class="progress-fill" data-width="90%"></div></div>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-info"><span>JavaScript</span><span>80%</span></div>
+                        <div class="progress-track"><div class="progress-fill" data-width="80%"></div></div>
+                    </div>
+                </div>
+
+                <div class="hologram-box">
+                    <img src="photo/qrcode.png" alt="QR Code" class="qr-img">
+                    <p style="margin-top:12px; font-size:0.8rem; color:var(--primary); letter-spacing: 1px;">[SCAN_TO_CONNECT]</p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="diary-grid">
+            
+            <div class="diary-card">
+                <div>
+                    <div class="card-meta">2025.10.11</div>
+                    <h3 class="card-title">首页</h3>
+                </div>
+                <div class="card-action">
+                    <span class="card-status-badge">LOG_ENTRY_ONLY</span>
+                </div>
+            </div>
+
+            <div class="diary-card">
+                <div>
+                    <div class="card-meta">2025.10.11</div>
+                    <h3 class="card-title">完善首页</h3>
+                </div>
+                <div class="card-action">
+                    <span class="card-status-badge">LOG_ENTRY_ONLY</span>
+                </div>
+            </div>
+
+            <div class="diary-card">
+                <div>
+                    <div class="card-meta">2025.10.22</div>
+                    <h3 class="card-title">常用HTML标记</h3>
+                </div>
+                <div class="card-action"><a href="20251022.html" class="btn-cyber">ACCESS -></a></div>
+            </div>
+            
+            <div class="diary-card">
+                <div>
+                    <div class="card-meta">2025.10.22</div>
+                    <h3 class="card-title">常用HTML标记（续）</h3>
+                </div>
+                <div class="card-action"><a href="20251022.html" class="btn-cyber">ACCESS -></a></div>
+            </div>
+
+            <div class="diary-card">
+                <div>
+                    <div class="card-meta">2025.11.05</div>
+                    <h3 class="card-title">表单</h3>
+                </div>
+                <div class="card-action"><a href="20251105.html" class="btn-cyber">ACCESS -></a></div>
+            </div>
+
+            <div class="diary-card">
+                <div>
+                    <div class="card-meta">2025.11.05</div>
+                    <h3 class="card-title">表单（续）</h3>
+                </div>
+                <div class="card-action"><a href="20251105.html" class="btn-cyber">ACCESS -></a></div>
+            </div>
+
+            <div class="diary-card">
+                <div>
+                    <div class="card-meta">2025.11.12</div>
+                    <h3 class="card-title">表单作业</h3>
+                </div>
+                <div class="card-action"><a href="20251112.html" class="btn-cyber">ACCESS -></a></div>
+            </div>
+
+            <div class="diary-card">
+                <div>
+                    <div class="card-meta">2025.11.19</div>
+                    <h3 class="card-title">CSS基础</h3>
+                </div>
+                <div class="card-action"><a href="20251119.html" class="btn-cyber">ACCESS -></a></div>
+            </div>
+
+            <div class="diary-card">
+                <div>
+                    <div class="card-meta">2025.11.26</div>
+                    <h3 class="card-title">常用样式</h3>
+                </div>
+                <div class="card-action"><a href="20251126.html" class="btn-cyber">ACCESS -></a></div>
+            </div>
+
+            <div class="diary-card">
+                <div>
+                    <div class="card-meta">2025.11.26</div>
+                    <h3 class="card-title">常用样式（续）</h3>
+                </div>
+                <div class="card-action"><a href="20251126.html" class="btn-cyber">ACCESS -></a></div>
+            </div>
+
+            <div class="diary-card">
+                <div>
+                    <div class="card-meta">2025.12.10</div>
+                    <h3 class="card-title">定位和布局</h3>
+                </div>
+                <div class="card-action"><a href="20251210.html" class="btn-cyber">ACCESS -></a></div>
+            </div>
+
+            <div class="diary-card">
+                <div>
+                    <div class="card-meta">2025.12.16</div>
+                    <h3 class="card-title">CSS作业</h3>
+                </div>
+                <div class="card-action"><a href="20251216.html" class="btn-cyber">ACCESS -></a></div>
+            </div>
+
+            <div class="diary-card">
+                <div>
+                    <div class="card-meta">2025.12.17</div>
+                    <h3 class="card-title">JavaScript</h3>
+                </div>
+                <div class="card-action"><a href="20251217.html" class="btn-cyber">ACCESS -></a></div>
+            </div>
+
+            <div class="diary-card">
+                <div>
+                    <div class="card-meta">2025.12.24</div>
+                    <h3 class="card-title">轮播图</h3>
+                </div>
+                <div class="card-action"><a href="20251224.html" class="btn-cyber">ACCESS -></a></div>
+            </div>
+
+            <div class="diary-card">
+                <div>
+                    <div class="card-meta">2025.12.30</div>
+                    <h3 class="card-title">JavaScript作业</h3>
+                </div>
+                <div class="card-action"><a href="20251230.html" class="btn-cyber">ACCESS -></a></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 1. 自定义光标
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            cursorOutline.animate({
+                left: `${posX}px`, top: `${posY}px`
+            }, { duration: 400, fill: "forwards" });
+        });
+
+        // 2. 进度条动画
+        const progressObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bar = entry.target;
+                    bar.style.width = bar.getAttribute('data-width');
+                    progressObserver.unobserve(bar);
+                }
+            });
+        }, { threshold: 0.5 });
+        document.querySelectorAll('.progress-fill').forEach(bar => progressObserver.observe(bar));
+
+        // 3. 卡片入场
+        const cardObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const delay = Math.random() * 300;
+                    setTimeout(() => {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }, delay);
+                    cardObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
+        document.querySelectorAll('.diary-card').forEach(card => cardObserver.observe(card));
+
+        // 4. 侧边栏 3D 效果
+        const tiltWrapper = document.getElementById('tiltWrapper');
+        const tiltCard = document.getElementById('tiltCard');
+        if(tiltCard && tiltWrapper) {
+            const rect = tiltCard.getBoundingClientRect();
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            tiltWrapper.addEventListener('mousemove', (e) => {
+                const cardRect = tiltCard.getBoundingClientRect();
+                const x = e.clientX - cardRect.left;
+                const y = e.clientY - cardRect.top;
+                // 增加一点旋转角度，效果更明显
+                const rotateX = ((y - centerY) / centerY) * -12; 
+                const rotateY = ((x - centerX) / centerX) * 12;
+                tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+            });
+            tiltWrapper.addEventListener('mouseleave', () => {
+                tiltCard.style.transform = `rotateX(0) rotateY(0) scale(1)`;
+            });
+        }
+    </script>
+</body>
+</html>

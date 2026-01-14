@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>20251112表单作业</title>
+	</head>
+	<body>
+		<p><a href="default.html">返回首页</a></p>
+		<form action="">
+			<fieldset>
+				<legend>帐号信息</legend>
+			<p>
+				<label for="txtid">帐号：</label>
+				<input type="text" name="txtid" id="txtid" value="202503005131"/>
+		    </p>
+			<p>
+			<label for="password">密码：</label>
+			<input type="password" name="password" id="password" value="xxxxxxxxxx"pattern="password"/>
+			</p>
+			</fieldset>
+			<fieldset>
+				<legend>基本信息</legend>
+				<p>
+					<label for="txtName">姓名：</label>
+					<input type="text" name="txtName" id="txtName"placeholder="必须为中文"required
+					value="陈俊洋" pattern="txtName">
+				</p>
+				<p>
+					<label for="">性别：</label>
+					<input type="radio" name="gender" id="male"checked><label for="male">男</label>
+					<input type="radio" name="gender" id="female"><label for="female">女</label>
+				</p>
+				<p>
+					<label for="">国籍/地区：</label>
+					<select name="select"multiple>
+						<optgroup label="亚洲">
+							<option value="cn"checked>中国</option>
+							<option value="jp">日本</option>
+							<option value="kr">韩国</option>
+						</optgroup>
+						<optgroup label="欧洲">
+							<option value="de">德国</option>
+							<option value="it">意大利</option>
+							<option value="gb">英国</option>
+
+						</optgroup>
+						<optgroup label="北美洲">
+							<option value="us">美国</option>
+							<option value="ca">加拿大</option>
+							<option value="mx">墨西哥</option>
+						</optgroup>
+					</select>
+				</p>
+				<p>
+					<label for="date">出生日期：</label>
+					<input type="date" name="date" id="date"value="2007-04-28">
+				</p>
+				<p>
+					<label for="salary">现有月薪：</label>
+					<input type="number" name="salary" id="salary" value="13456"/>
+				</p>
+				<p>
+					<label for="image">上传照片：</label>
+					<input type="file" name="image" id="image" accept="image/*"/>
+				</p>
+			</fieldset>
+			<fieldset>
+				<legend>联系信息</legend>
+				<p>
+					<label for="email">邮箱：</label>
+					<input type="email" name="email" id="email"value="3327383452@qq.com"placeholder="格式必须正确" >
+				</p>
+				<p>
+					<label for="tel">电话：</label>
+					<input type="tel" name="tel" id="tel"value="15013665077"required>
+				</p>
+				<p>
+					<label for="url">网址：</label>
+					<input type="url" name="url" id="url"value="http://202503005131.wfd.pc.hstc.edu.cn">
+				</p>
+			</fieldset>
+			<fieldset>
+				<legend>兴趣爱好</legend>
+				<p>
+					<label for="">运动：</label>
+					<input type="checkbox" name="favs" id="run" /><label for="run">跑步</label>
+					<input type="checkbox" name="favs" id="swim" /><label for="swim">游泳</label>
+					<input type="checkbox" name="favs" id="other"checked /><label for="other">其他</label>					
+				</p>
+				<p>
+					<label for="">颜色：</label>
+					<input type="color" name="color" id="color" value="#7cbbfe"/>
+				</p>
+			</fieldset>
+			<fieldset>
+				<legend>工作经历</legend>
+				<p>
+					<textarea name="txt" id="txt" cols="30" rows="10">聚焦专业相关书籍研读，结合课程学习做深度复盘，通过文献梳理、知识点拆解夯实基础，锻炼信息整合与高效吸收能力。</textarea>
+				</p>
+			</fieldset>
+			<p><input type="image" src="image/btn.bmp" alt="提交" /><input type="reset" value="重置" /></p>
+		</form>
+	</body>
+</html>
