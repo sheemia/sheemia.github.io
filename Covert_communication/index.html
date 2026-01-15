@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="../photo/favicon.ico" />
+    <title>隐秘通信终端</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>⚡ 隐秘通信终端</h2>
+
+      <div>
+        <label>输入内容 (明文 或 伪装代码):</label>
+        <textarea id="input" placeholder="输入你想说的话..."></textarea>
+      </div>
+
+      <div>
+        <label>加密密钥 (不保存，每次需重新输入):</label>
+        <input type="text" id="password" placeholder="双方需约定一致的密码" />
+      </div>
+
+      <div class="control-group">
+        <div>
+          <label>
+            🔐 加密算法
+            <span class="help-icon" onclick="showHelp('algo')">?</span>
+          </label>
+          <select id="algo" onchange="saveSettings()">
+            <option value="XOR">XOR (极速/基础)</option>
+            <option value="RC4">RC4 (流加密/推荐)</option>
+            <option value="AES">AES (最高安全)</option>
+          </select>
+        </div>
+        <div>
+          <label>
+            🎭 伪装模版
+            <span class="help-icon" onclick="showHelp('disguise')">?</span>
+          </label>
+          <select id="disguise" onchange="saveSettings()">
+            <option value="none" selected>不伪装 (Raw)</option>
+            <option value="python">Python 变量</option>
+            <option value="json">JSON 配置</option>
+            <option value="cpp">C++ 报错堆栈</option>
+            <option value="mysql">SQL 链接串</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-enc" onclick="process('encrypt')">
+          🔒 加密发送
+        </button>
+        <button class="btn-dec" onclick="process('decrypt')">
+          🔓 解密查看
+        </button>
+      </div>
+
+      <div>
+        <label>结果输出:</label>
+        <div id="output" class="result-box">...</div>
+        <button class="btn-copy" onclick="copyResult()">复制结果</button>
+      </div>
+
+      <div class="status-line" id="status-text">设置已自动保存</div>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay" onclick="closeModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header" id="modal-title">帮助</div>
+        <div class="modal-body" id="modal-body">内容</div>
+        <button class="close-btn" onclick="closeModal()">关闭</button>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

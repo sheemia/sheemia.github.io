@@ -41,6 +41,9 @@ const translations = {
       "基于STC89C52RC芯片设计的寻迹小车，完成了第一届602杯的所有任务，取得了不错的成绩。",
     proj_3_title: "Web前端学习日记",
     proj_3_desc: "上Web前端课所做的作品。",
+    proj_4_title: "隐秘通信终端",
+    proj_4_desc:
+      "专为秘密聊天的离线加密网页。支持AES/RC4算法，独创代码伪装功能，将敏感文字包装成Python/JSON代码片段，完美绕过关键词审查与风控，保障隐私安全。",
     section_awards: "荣誉奖项",
     // 奖项
     award_1_year: "2025.12",
@@ -96,6 +99,9 @@ const translations = {
     proj_3_title: "Frontend Learning Diary",
     proj_3_desc:
       "Coursework projects created during Web Frontend development classes.",
+    proj_4_title: "Secret Communication Terminal",
+    proj_4_desc:
+      "Offline encrypted chat webpage. Supports AES/RC4 algorithms and unique code camouflage, disguising sensitive text as Python/JSON snippets to bypass censorship and ensure privacy.",
     section_awards: "HONORS & AWARDS",
     // Awards
     award_1_year: "Dec 2025",

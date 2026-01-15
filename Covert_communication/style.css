@@ -1,0 +1,232 @@
+:root {
+  --primary: #07c160;
+  --secondary: #1989fa;
+  --bg: #f0f2f5;
+  --card: #ffffff;
+  --text: #2c3e50;
+  --border: #e6e6e6;
+  --modal-bg: rgba(0, 0, 0, 0.5);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg);
+  margin: 0;
+  padding: 20px;
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.container {
+  background: var(--card);
+  width: 100%;
+  max-width: 500px;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: relative;
+}
+
+h2 {
+  margin: 0;
+  text-align: center;
+  font-size: 1.4rem;
+  color: #333;
+}
+
+/* 问号小图标样式 */
+.help-icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #ddd;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 6px;
+  vertical-align: middle;
+  transition: background 0.2s;
+}
+.help-icon:hover {
+  background-color: #999;
+}
+
+.control-group {
+  display: flex;
+  gap: 10px;
+}
+.control-group > div {
+  flex: 1;
+}
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+textarea,
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  box-sizing: border-box;
+  background: #fcfcfc;
+  transition: all 0.2s;
+}
+textarea:focus,
+input:focus,
+select:focus {
+  border-color: var(--primary);
+  background: #fff;
+}
+textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+.btn-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 5px;
+}
+button {
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+button:active {
+  opacity: 0.8;
+}
+.btn-enc {
+  background-color: var(--primary);
+  color: white;
+}
+.btn-dec {
+  background-color: var(--secondary);
+  color: white;
+}
+.btn-copy {
+  background-color: #333;
+  color: white;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.result-box {
+  background-color: #282c34;
+  color: #abb2bf;
+  padding: 15px;
+  border-radius: 10px;
+  font-family: "Fira Code", "Consolas", monospace;
+  font-size: 0.9rem;
+  word-break: break-all;
+  min-height: 80px;
+}
+.status-line {
+  font-size: 0.8rem;
+  color: #999;
+  text-align: center;
+  margin-top: -10px;
+}
+
+/* === 模态弹窗样式 (Modal) === */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--modal-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s;
+  backdrop-filter: blur(2px);
+}
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: white;
+  width: 90%;
+  max-width: 400px;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  transform: translateY(20px);
+  transition: transform 0.2s;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal-overlay.active .modal-content {
+  transform: translateY(0);
+}
+
+.modal-header {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+}
+.modal-body {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #555;
+}
+.modal-body h4 {
+  margin: 15px 0 5px 0;
+  color: #333;
+}
+.modal-body code {
+  background: #f4f4f4;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-family: monospace;
+  color: #d63384;
+}
+.modal-body pre {
+  background: #282c34;
+  color: #abb2bf;
+  padding: 10px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  margin: 5px 0;
+}
+.close-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px;
+  background: #eee;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #555;
+}
